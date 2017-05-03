@@ -17,6 +17,8 @@ import (
 	"os"
 	"path/filepath"
 	"net/http"
+	"strings"
+	gohtml "golang.org/x/net/html"
 )
 
 func getIndex() (bleve.Index, error) {
@@ -24,7 +26,9 @@ func getIndex() (bleve.Index, error) {
 	var index bleve.Index
 	var err error
 	if index, err = bleve.Open("docs.bleve"); err != nil {
+
 		mapping := bleve.NewIndexMapping()
+
 		err = mapping.AddCustomAnalyzer("html", map[string]interface{}{
 			"type": custom.Name,
 			"char_filters": []string{
@@ -47,11 +51,15 @@ func getIndex() (bleve.Index, error) {
 func indexFile(path string, index bleve.Index) error {
 	dat, err := ioutil.ReadFile(path)
 	data := struct {
+		_type   string
 		Content string
 		Path    string
+		Title   string
 	}{
+		_type:   "doc",
 		Content: string(dat),
 		Path:    path,
+		Title:   getTitle(string(dat)),
 	}
 	fmt.Println(path)
 
@@ -73,7 +81,27 @@ func saveFile(file multipart.File, filename string) string {
 	return dest
 }
 
-
+func getTitle(data string) string {
+	doc, err := gohtml.Parse(strings.NewReader(data))
+	if err != nil {
+		log.Fatal(err)
+	}
+	var f func(*gohtml.Node) string
+	f = func(n *gohtml.Node) string {
+		if n.Type == gohtml.ElementNode && n.Data == "title" {
+			fmt.Printf("==> %s\n", n.FirstChild.Data)
+			return n.FirstChild.Data
+		}
+		for c := n.FirstChild; c != nil; c = c.NextSibling {
+			xx := f(c)
+			if len(xx) > 0 {return xx}
+		}
+		return ""
+	}
+	xx := f(doc)
+	fmt.Printf("--> %s\n", xx)
+	return xx
+}
 
 func main() {
 	var idx bleve.Index
@@ -85,6 +113,7 @@ func main() {
 	glob := "**/*.html"
 
 	r := gin.Default()
+
 	r.LoadHTMLGlob("templates/*")
 	r.GET("/", func(c *gin.Context) {
 		// search for some text
@@ -92,6 +121,7 @@ func main() {
 		if queryString != "" {
 			query := bleve.NewMatchQuery(queryString)
 			search := bleve.NewSearchRequest(query)
+			search.Fields = []string{"Title"}
 			searchResults, err := idx.Search(search)
 			if err != nil {
 				fmt.Println(err)
