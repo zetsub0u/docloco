@@ -73,6 +73,8 @@ func saveFile(file multipart.File, filename string) string {
 	return dest
 }
 
+
+
 func main() {
 	var idx bleve.Index
 	var err error
@@ -83,19 +85,25 @@ func main() {
 	glob := "**/*.html"
 
 	r := gin.Default()
-	r.GET("/search", func(c *gin.Context) {
+	r.LoadHTMLGlob("templates/*")
+	r.GET("/", func(c *gin.Context) {
 		// search for some text
-		query := bleve.NewMatchQuery("Exception")
-		search := bleve.NewSearchRequest(query)
-		searchResults, err := idx.Search(search)
-		if err != nil {
-			fmt.Println(err)
-			return
+		queryString := c.Query("q")
+		if queryString != "" {
+			query := bleve.NewMatchQuery(queryString)
+			search := bleve.NewSearchRequest(query)
+			searchResults, err := idx.Search(search)
+			if err != nil {
+				fmt.Println(err)
+				return
+			}
+			fmt.Println(searchResults)
+			c.HTML(http.StatusOK, "results.html", gin.H{
+				"results": searchResults})
+		} else {
+			// Render search form
+			c.HTML(http.StatusOK, "index.html", gin.H{})
 		}
-		fmt.Println(searchResults)
-		c.JSON(200, gin.H{
-			"message": searchResults,
-		})
 	})
 
 	r.POST("/upload", func(c *gin.Context) {
