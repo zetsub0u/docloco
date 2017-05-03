@@ -132,20 +132,4 @@ func main() {
 	r.StaticFS("/docs", http.Dir("docs"))
 
 	r.Run() // listen and serve on 0.0.0.0:8080
-
-	//matches, _ := zglob.Glob(path)
-
-	/*	for _, htmlPath := range matches {
-			indexFile(htmlPath, idx)
-		}
-
-		// search for some text
-		query := bleve.NewMatchQuery("Exception")
-		search := bleve.NewSearchRequest(query)
-		searchResults, err := idx.Search(search)
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
-		fmt.Println(searchResults)*/
 }
