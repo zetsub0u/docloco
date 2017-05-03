@@ -63,7 +63,7 @@ h1 {
 
     <div>
         <p>
-            Found: {{ .results.Total}} results in {{ .results.Took }}
+            Found: {{ .results.Hits | len}} results in {{ .results.Took }}
         </p>
         <hr>
         <ul>
