@@ -121,7 +121,7 @@ func main() {
 		if queryString != "" {
 			query := bleve.NewMatchQuery(queryString)
 			search := bleve.NewSearchRequest(query)
-			search.Fields = []string{"Title"}
+			search.Fields = []string{"*"}
 			searchResults, err := idx.Search(search)
 			if err != nil {
 				fmt.Println(err)
@@ -129,7 +129,8 @@ func main() {
 			}
 			fmt.Println(searchResults)
 			c.HTML(http.StatusOK, "results.html", gin.H{
-				"results": searchResults})
+				"results": searchResults,
+				"query": queryString,})
 		} else {
 			// Render search form
 			c.HTML(http.StatusOK, "index.html", gin.H{})
