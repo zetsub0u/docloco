@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/docloco/utils"
+	"github.com/zetsub0u/docloco/utils"
 	"fmt"
 	"github.com/blevesearch/bleve"
 	"github.com/blevesearch/bleve/analysis/analyzer/custom"
