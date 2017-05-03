@@ -1,7 +1,7 @@
 package main
 
 import (
-	"docloco/utils"
+	"github.com/docloco/utils"
 	"fmt"
 	"github.com/blevesearch/bleve"
 	"github.com/blevesearch/bleve/analysis/analyzer/custom"
@@ -16,6 +16,7 @@ import (
 	"mime/multipart"
 	"os"
 	"path/filepath"
+	"net/http"
 )
 
 func getIndex() (bleve.Index, error) {
@@ -105,7 +106,6 @@ func main() {
 		filename := header.Filename
 		fmt.Println(header.Filename)
 		zipFile := saveFile(file, filename)
-		fmt.Println("adasda")
 		name := c.Request.FormValue("name")
 		version := c.Request.FormValue("version")
 		dest := filepath.Join("docs", name, version)
@@ -120,6 +120,8 @@ func main() {
 		}
 
 	})
+
+	r.StaticFS("/docs", http.Dir("docs"))
 
 	r.Run() // listen and serve on 0.0.0.0:8080
 
