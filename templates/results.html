@@ -1,19 +1,131 @@
 <!DOCTYPE html>
-<html lang="en">
+<html >
 <head>
-    <meta charset="UTF-8">
-    <title>Search Results</title>
+    <meta charset="utf-8">
+    <title>Results</title>
+    <base target="_self">
+    <meta name="description" content="Codeply is a free editor online for Web developers and designers." />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google" value="notranslate">
+    <link rel="shortcut icon" href="/images/cp_ico.png">
+    <!--stylesheets / link tags loaded here-->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" />
+    <style type="text/css">@import url(http://fonts.googleapis.com/css?family=Antic+Slab);
+
+html,body {
+  height:100%;
+}
+
+h1 {
+  font-family: 'Antic Slab', serif;
+  font-size:80px;
+  color:#DDCCEE;
+}
+
+.lead {
+	color:#DDCCEE;
+}
+
+
+/* Custom container */
+.container-full {
+  margin: 0 auto;
+  padding-top: 1em;
+  width: 100%;
+  min-height:100%;
+  background-color:#110022;
+  color:#eee;
+  overflow:hidden;
+}
+
+.container-full a {
+  color:#efefef;
+  text-decoration:none;
+}
+
+  </style>
+
 </head>
-<body>
-<h1>Results</h1>
-<p>
-    Found: {{ .results.Total}} results in {{ .results.Took }}
-</p>
-<hr>
-<ul>
-    {{ range .results.Hits }}
-    <li><a href="{{ .ID }}">{{.ID}}</a>
-    {{ end }}
-</ul>
-</body>
-</html>
+<body >
+<div class="container-full">
+    <div class="row">
+        <div class="col-lg-12 text-center v-center">
+            <form class="col-lg-12">
+                <div class="input-group input-group-lg col-sm-offset-4 col-sm-4">
+                    <input type="text" class="center-block form-control input-lg" title="Search" placeholder="Search" name="q" value="{{ .query}}">
+                    <span class="input-group-btn"><button class="btn btn-lg btn-primary" type="submit"><i class="fa fa-search" aria-hidden="true"></i></button></span>
+                </div>
+            </form>
+        </div>
+
+    </div> <!-- /row -->
+
+    <div>
+        <p>
+            Found: {{ .results.Hits | len}} results in {{ .results.Took }}
+        </p>
+        <hr>
+        <ul>
+            {{ range .results.Hits }}
+            <li><a href="{{ .ID }}">{{.Fields.Title}}</a>
+                <p>{{ index .Fragments.Content 0 }}</p>
+            {{ end }}
+        </ul>
+
+    </div>
+
+    <br><br><br><br><br>
+
+    <div class="row">
+        <div class="col-lg-12 text-center">
+            <br><br>
+            <p><a href="https://github.com/zetsub0u/docloco">DocLoco</a> &nbsp; ©Copyright 2017 the DocLoco team.</p>
+            <br><br>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    // sandbox disable popups
+    if (window.self !== window.top && window.name!="view1") {;
+      window.alert = function(){/*disable alert*/};
+      window.confirm = function(){/*disable confirm*/};
+      window.prompt = function(){/*disable prompt*/};
+      window.open = function(){/*disable open*/};
+    }
+
+    // prevent href=# click jump
+    document.addEventListener("DOMContentLoaded", function() {
+      var links = document.getElementsByTagName("A");
+      for(var i=0; i < links.length; i++) {
+        if(links[i].href.indexOf('#')!=-1) {
+          links[i].addEventListener("click", function(e) {
+          console.debug("prevent href=# click");
+              if (this.hash) {
+                if (this.hash=="#") {
+                  e.preventDefault();
+                  return false;
+                }
+                else {
+                  /*
+                  var el = document.getElementById(this.hash.replace(/#/, ""));
+                  if (el) {
+                    el.scrollIntoView(true);
+                  }
+                  */
+                }
+              }
+              return false;
+          })
+        }
+      }
+    }, false);
+  </script>
+
+<!--scripts loaded here-->
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
