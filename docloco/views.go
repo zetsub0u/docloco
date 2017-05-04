@@ -5,7 +5,20 @@ import (
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
+	"html/template"
+	"github.com/jaytaylor/html2text"
 )
+
+type displayResult struct {
+	Url string
+	Title string
+	Highlight template.HTML
+}
+
+func cleanHighlight(input string) template.HTML {
+	txt, _ := html2text.FromString(input)
+	return template.HTML(txt)
+}
 
 func searchView(c *gin.Context) {
 	// search for some text
@@ -16,12 +29,22 @@ func searchView(c *gin.Context) {
 			c.JSON(400, gin.H{
 				"status": "failed",
 				"error":  "something went wrong",
-			})
-		}
+			})}
 		fmt.Println(searchResults)
+		results := make([]displayResult, len(searchResults.Hits))
+		for i := 0; i < len(searchResults.Hits); i++ {
+			results[i] = displayResult{
+				Url: searchResults.Hits[i].ID,
+				Title: string(searchResults.Hits[i].Fields["Title"].(string)),
+				Highlight: cleanHighlight(searchResults.Hits[i].Fragments["Content"][0]),
+			}
+		}
 		c.HTML(http.StatusOK, "results.html", gin.H{
-			"results": searchResults,
-			"query":   queryString})
+			"results": results,
+			"query":   queryString,
+			"Took": searchResults.Took,
+			"Found": len(searchResults.Hits),
+		})
 	} else {
 		// Render search form
 		c.HTML(http.StatusOK, "index.html", gin.H{})
