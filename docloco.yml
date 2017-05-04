@@ -1,0 +1,8 @@
+---
+verbose: false
+debug: true
+storage_dir: ./docs
+index_dir: ./index.bleve
+server:
+  host: 127.0.0.1
+  port: 6660
