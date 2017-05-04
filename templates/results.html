@@ -63,13 +63,13 @@ h1 {
 
     <div>
         <p>
-            Found: {{ .results.Hits | len}} results in {{ .results.Took }}
+            Found: {{ .Found }} results in {{ .Took }}
         </p>
         <hr>
         <ul>
-            {{ range .results.Hits }}
-            <li><a href="{{ .ID }}">{{.Fields.Title}}</a>
-                <p>{{ index .Fragments.Content 0 }}</p>
+            {{ range .results }}
+            <li><a href="{{ .Url }}">{{.Title}}</a>
+                <p>{{ .Highlight }}</p>
             {{ end }}
         </ul>
 
@@ -80,7 +80,7 @@ h1 {
     <div class="row">
         <div class="col-lg-12 text-center">
             <br><br>
-            <p><a href="https://github.com/zetsub0u/docloco">DocLoco</a> &nbsp; ©Copyright 2017 the DocLoco team.</p>
+            <p><a href="https://github.com/zetsub0u/docloco">DocLoco</a>&nbsp;&nbsp;©&nbsp;Copyright 2017 the DocLoco team.</p>
             <br><br>
         </div>
     </div>
