@@ -274,6 +274,10 @@
 			"Rev": "76626ae9c91c4f2a10f34cad8ce83ea42c93bb75"
 		},
 		{
+			"ImportPath": "github.com/jaytaylor/html2text",
+			"Rev": "f3b8a7ca0a23f0a806b2e1ad1247de39ecde54bf"
+		},
+		{
 			"ImportPath": "github.com/kardianos/osext",
 			"Rev": "9d302b58e975387d0b4d9be876622c86cefe64be"
 		},
@@ -341,6 +345,10 @@
 		{
 			"ImportPath": "github.com/spf13/viper",
 			"Rev": "84f94806c67f59dd7ae87bc5351f7a9c94a4558d"
+		},
+		{
+			"ImportPath": "github.com/ssor/bom",
+			"Rev": "6ed919a936d5ab554e4b40bc51f7c522488122c6"
 		},
 		{
 			"ImportPath": "github.com/steveyen/gtreap",
