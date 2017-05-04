@@ -69,7 +69,8 @@ h1 {
         <ul>
             {{ range .results.Hits }}
             <li><a href="{{ .ID }}">{{.Fields.Title}}</a>
-                {{ end }}
+                <p>{{ index .Fragments.Content 0 }}</p>
+            {{ end }}
         </ul>
 
     </div>

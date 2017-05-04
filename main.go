@@ -121,6 +121,7 @@ func main() {
 		if queryString != "" {
 			query := bleve.NewMatchQuery(queryString)
 			search := bleve.NewSearchRequest(query)
+			search.Highlight = bleve.NewHighlightWithStyle(html.Name)
 			search.Fields = []string{"*"}
 			searchResults, err := idx.Search(search)
 			if err != nil {
