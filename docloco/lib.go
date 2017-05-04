@@ -17,6 +17,8 @@ import (
 	"strings"
 )
 
+
+// Open or create a new Bleve Index repository, it also initializes the mapper analyzers.
 func getIndex() (bleve.Index, error) {
 	// open a new index
 	var index bleve.Index
@@ -44,6 +46,7 @@ func getIndex() (bleve.Index, error) {
 	return index, err
 }
 
+// Index the contents of an html file with some basic parsing
 func indexFile(path string, index bleve.Index) error {
 	dat, err := ioutil.ReadFile(path)
 	if err != nil {
@@ -66,6 +69,7 @@ func indexFile(path string, index bleve.Index) error {
 	return err
 }
 
+// Save the received zipfile in the filesystem to be later processed
 func saveFile(file *multipart.File, filename string) (string, error) {
 	tmp := "/tmp/" + filename
 	out, err := os.Create(tmp)
@@ -79,6 +83,8 @@ func saveFile(file *multipart.File, filename string) (string, error) {
 	return tmp, nil
 }
 
+
+// Extract the title
 func getTitle(data string) string {
 	doc, err := html.Parse(strings.NewReader(data))
 	if err != nil {
@@ -103,6 +109,8 @@ func getTitle(data string) string {
 	return xx
 }
 
+
+// Search the index for a given keyword
 func doSearch(queryString string) (*bleve.SearchResult, error) {
 	query := bleve.NewMatchQuery(queryString)
 	search := bleve.NewSearchRequest(query)

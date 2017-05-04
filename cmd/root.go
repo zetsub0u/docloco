@@ -6,6 +6,7 @@ import (
 	"os"
 )
 
+// CLI Entrypoint
 var RootCmd = &cobra.Command{
 	Use:   "docloco",
 	Short: "",

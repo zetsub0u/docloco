@@ -8,6 +8,8 @@ import (
 	"path/filepath"
 )
 
+
+// Unzips a file from a source path to a destination path
 func Unzip(src, dest string) error {
 	r, err := zip.OpenReader(src)
 	if err != nil {

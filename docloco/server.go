@@ -13,8 +13,11 @@ import (
 
 var idx bleve.Index
 
+// The glob pattern used to find files to be indexed inside the supplied documentation package
 const globPattern string = "**/*.html"
 
+// Load templates from rice.go, this will either read the templates from the local filesystem
+// or from the embeded generated go source code if rice embed-go is run before building.
 func loadTemplates(list ...string) multitemplate.Render {
 	templateBox, err := rice.FindBox("../templates")
 	if err != nil {
@@ -40,6 +43,7 @@ func loadTemplates(list ...string) multitemplate.Render {
 	return r
 }
 
+// Starts the Web Server
 func RunServer() {
 	if !config.Store.Debug {
 		gin.SetMode(gin.ReleaseMode)

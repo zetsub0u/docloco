@@ -18,8 +18,10 @@ type Storage struct {
 	}
 }
 
+// Configuration in-memory storage, holds all the configuration information parsed from configfiles and flags
 var Store Storage = Storage{}
 
+// Loads the Config Store
 func (s *Storage) Load(configFile string) {
 	if configFile == "" {
 		configFile = "docloco"
@@ -27,6 +29,8 @@ func (s *Storage) Load(configFile string) {
 	s.LoadConfig(configFile)
 }
 
+
+// Load the config Store from a file
 func (s *Storage) LoadConfig(configName string) {
 	viper.SetConfigName(configName) // name of config file (without extension)
 	viper.AddConfigPath(".")        // optionally look for config in the working directory
