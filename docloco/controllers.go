@@ -23,7 +23,7 @@ func uploadController(file *multipart.File, filename, name, version string) erro
 	globPath := filepath.Join(dest, globPattern)
 	matches, _ := zglob.Glob(globPath)
 	for _, htmlPath := range matches {
-		if err := indexFile(htmlPath, idx); err != nil {
+		if err := indexFile(htmlPath, name, version, idx); err != nil {
 			return err
 		}
 	}

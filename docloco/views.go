@@ -6,18 +6,14 @@ import (
 	"log"
 	"net/http"
 	"html/template"
-	"github.com/jaytaylor/html2text"
 )
 
 type displayResult struct {
 	Url string
 	Title string
 	Highlight template.HTML
-}
-
-func cleanHighlight(input string) template.HTML {
-	txt, _ := html2text.FromString(input)
-	return template.HTML(txt)
+	Project string
+	Version string
 }
 
 func searchView(c *gin.Context) {
@@ -33,10 +29,19 @@ func searchView(c *gin.Context) {
 		fmt.Println(searchResults)
 		results := make([]displayResult, len(searchResults.Hits))
 		for i := 0; i < len(searchResults.Hits); i++ {
+			var highlight template.HTML
+			if len(searchResults.Hits[i].Fragments["PlainContent"]) > 0 {
+				highlight = template.HTML(searchResults.Hits[i].Fragments["PlainContent"][0])
+			} else {
+				highlight = template.HTML("")
+			}
+
 			results[i] = displayResult{
 				Url: searchResults.Hits[i].ID,
 				Title: string(searchResults.Hits[i].Fields["Title"].(string)),
-				Highlight: cleanHighlight(searchResults.Hits[i].Fragments["Content"][0]),
+				Highlight: highlight,
+				Project: string(searchResults.Hits[i].Fields["Project"].(string)),
+				Version: string(searchResults.Hits[i].Fields["Version"].(string)),
 			}
 		}
 		c.HTML(http.StatusOK, "results.html", gin.H{
