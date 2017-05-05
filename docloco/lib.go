@@ -15,6 +15,7 @@ import (
 	"mime/multipart"
 	"os"
 	"strings"
+	"github.com/jaytaylor/html2text"
 )
 
 
@@ -47,21 +48,30 @@ func getIndex() (bleve.Index, error) {
 }
 
 // Index the contents of an html file with some basic parsing
-func indexFile(path string, index bleve.Index) error {
+func indexFile(path string, name string, version string, index bleve.Index) error {
 	dat, err := ioutil.ReadFile(path)
 	if err != nil {
 		return err
 	}
+	content := string(dat)
+	plainContent, _ := html2text.FromString(content)
+
 	data := struct {
 		_type   string
 		Content string
 		Path    string
 		Title   string
+		Project string
+		Version string
+		PlainContent string
 	}{
 		_type:   "doc",
-		Content: string(dat),
+		Content: content,
 		Path:    path,
 		Title:   getTitle(string(dat)),
+		Project: name,
+		Version: version,
+		PlainContent: plainContent,
 	}
 	fmt.Println(path)
 

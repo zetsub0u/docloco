@@ -68,7 +68,7 @@ h1 {
         <hr>
         <ul>
             {{ range .results }}
-            <li><a href="{{ .Url }}">{{.Title}}</a>
+            <li><a href="{{ .Url }}">{{.Project}} -> {{.Version}} -> {{.Title}}</a>
                 <p>{{ .Highlight }}</p>
             {{ end }}
         </ul>
